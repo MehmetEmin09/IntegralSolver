@@ -81,4 +81,10 @@ class LexerTest {
     void decimalPointIsRejected() {
         assertThrows(ParseException.class, () -> Lexer.tokenize("1.5"));
     }
+
+    @Test
+    void functionsAndBars() {
+        assertEquals(List.of(FUNC, LPAREN, BAR, X, BAR, RPAREN, EOF), types("ln(|x|)"));
+        assertEquals("asin", Lexer.tokenize("arcsin").get(0).text());
+    }
 }
