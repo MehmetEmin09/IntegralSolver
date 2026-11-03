@@ -4,7 +4,7 @@ import integral.math.Rational;
 
 public sealed interface Node permits
         Node.Num, Node.Var, Node.Const,
-        Node.Add, Node.Mul, Node.Pow, Node.Neg {
+        Node.Add, Node.Mul, Node.Pow, Node.Neg, Node.Func {
 
     static Node num(long value) {
         return new Num(Rational.of(value, 1));
@@ -37,4 +37,6 @@ public sealed interface Node permits
 
     // unary minus
     record Neg(Node operand) implements Node {}
+
+    record Func(FuncKind kind, Node arg) implements Node {}
 }
