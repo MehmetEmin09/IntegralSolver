@@ -1,5 +1,6 @@
 plugins {
     java
+    application
 }
 
 group = "integral"
@@ -26,4 +27,8 @@ tasks.test {
     testLogging {
         events("passed", "skipped", "failed")
     }
+}
+
+application {
+    mainClass = "integral.Main"
 }
