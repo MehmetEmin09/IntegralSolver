@@ -38,6 +38,9 @@ public final class Printer {
             // Base must be an atom; exponent may itself be a Pow (right-associative)
             case Pow p -> print(p.base(), ATOM) + "^" + print(p.exponent(), POW);
             case Neg ng -> "-" + print(ng.operand(), NEG);
+            case Func f -> f.kind() == FuncKind.ABS
+                    ? "|" + print(f.arg(), 0) + "|"
+                    : f.kind().text() + "(" + print(f.arg(), 0) + ")";
         };
 
         if (precedence(node) < parentPrecedence) {
@@ -55,6 +58,7 @@ public final class Printer {
             case Mul m -> MUL;
             case Neg ng -> NEG;
             case Pow p -> POW;
+            case Func f -> ATOM;
         };
     }
 

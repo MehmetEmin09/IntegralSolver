@@ -34,13 +34,18 @@ public final class Lexer {
                     i++;
                 }
                 String word = input.substring(start, i);
-                TokenType type = switch (word) {
-                    case "x" -> TokenType.X;
-                    case "pi" -> TokenType.PI;
-                    case "e" -> TokenType.E;
-                    default -> throw new ParseException("Unknown identifier '" + word + "'", start);
-                };
-                tokens.add(new Token(type, word, start));
+                switch (word) {
+                    case "x" -> tokens.add(new Token(TokenType.X, word, start));
+                    case "pi" -> tokens.add(new Token(TokenType.PI, word, start));
+                    case "e" -> tokens.add(new Token(TokenType.E, word, start));
+                    default -> {
+                        String canonical = canonicalFunctionName(word);
+                        if (canonical == null) {
+                            throw new ParseException("Unknown identifier '" + word + "'", start);
+                        }
+                        tokens.add(new Token(TokenType.FUNC, canonical, start));
+                    }
+                }
                 continue;
             }
 
@@ -52,6 +57,7 @@ public final class Lexer {
                 case '^' -> TokenType.CARET;
                 case '(' -> TokenType.LPAREN;
                 case ')' -> TokenType.RPAREN;
+                case '|' -> TokenType.BAR;
                 default -> throw new ParseException("Unexpected character '" + c + "'", i);
             };
             tokens.add(new Token(type, String.valueOf(c), i));
@@ -60,6 +66,19 @@ public final class Lexer {
 
         tokens.add(new Token(TokenType.EOF, "", input.length()));
         return tokens;
+    }
+
+    // Returns the canonical function name, or null if the word is not a function.
+    // "abs" is deliberately absent: absolute value is written |...|.
+    private static String canonicalFunctionName(String word) {
+        return switch (word) {
+            case "sin", "cos", "tan", "sec", "csc", "cot", "ln", "sqrt",
+                 "asin", "acos", "atan" -> word;
+            case "arcsin" -> "asin";
+            case "arccos" -> "acos";
+            case "arctan" -> "atan";
+            default -> null;
+        };
     }
 
     // ASCII only, so Unicode digits and letters are rejected

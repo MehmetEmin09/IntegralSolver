@@ -44,6 +44,7 @@ class NodeTest {
             case Mul m -> "mul";
             case Pow p -> "pow";
             case Neg ng -> "neg";
+            case Func f -> "func";
         };
         assertEquals("neg", kind);
     }
