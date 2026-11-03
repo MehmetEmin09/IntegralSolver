@@ -1,5 +1,6 @@
 plugins {
     java
+    application
 }
 
 group = "integral"
@@ -23,4 +24,11 @@ java {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
+
+application {
+    mainClass = "integral.Main"
 }
